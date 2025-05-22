@@ -40,9 +40,18 @@ class MainActivity : AppCompatActivity() {
         adapter.submitList(wines)
     }
 
-    private fun getLocalWines() = listOf(Wine("Toro", "Rosa",
-        Rating("5.5", "236 ratings"), "Ecuador",
-        "https://images.vivino.com/thumbs/l_eXmV1KTdGzz3ky_Qey3A_pb_x300.png", 1))
+    private fun getLocalWines() = listOf(Wine("Maselva", "Emporda 2012",
+        Rating("4.9", "88 ratings"), "Spain\\n·\\nEmpordà",
+        "https://images.vivino.com/thumbs/ApnIiXjcT5Kc33OHgNb9dA_375x500.jpg", 1),
+    Wine("Perro", "Rojo",
+    Rating("5.6", "237 ratings"), "Mexico",
+    "https://images.vivino.com/thumbs/nC9V6L2mQQSq0s-wZLcaxw_pb_x300.png", 2),
+    Wine("Gato", "Gris",
+    Rating("5.5", "238 ratings"), "Colombia",
+    "https://images.vivino.com/thumbs/L33jsYUuTMWTMy3KoqQyXg_pb_x300.png", 3),
+    Wine("Gallina", "Blanco",
+    Rating("5.5", "239 ratings"), "Peru",
+    "https://images.vivino.com/thumbs/GpcSXs2ERS6niDxoAsvESA_pb_x300.png", 4))
 
 
     override fun onResume() {
