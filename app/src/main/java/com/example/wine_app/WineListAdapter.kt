@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.wine_app.databinding.ItemWineBinding
 
 class WineListAdapter : ListAdapter<Wine, RecyclerView.ViewHolder>(WineDiff()) {
@@ -30,6 +31,7 @@ class WineListAdapter : ListAdapter<Wine, RecyclerView.ViewHolder>(WineDiff()) {
 
                 Glide.with(context)
                     .load(wine.image)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(imgWine)
             }
