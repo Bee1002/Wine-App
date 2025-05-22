@@ -41,7 +41,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getLocalWines() = listOf(Wine("Toro", "Rosa",
-        Rating("5.5", "236 ratings"), "Ecuador", "https://images.vivino.com/thumbs/l_eXmV1KTdGzz3ky_Qey3A_pb_x300.png", 1))
+        Rating("5.5", "236 ratings"), "Ecuador",
+        "https://images.vivino.com/thumbs/l_eXmV1KTdGzz3ky_Qey3A_pb_x300.png", 1))
 
 
     override fun onResume() {
