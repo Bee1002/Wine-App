@@ -1,18 +1,29 @@
 package com.example.wine_app
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.wine_app.databinding.ActivityMainBinding
+import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var adapter: WineListAdapter
     private lateinit var binding: ActivityMainBinding
+    private lateinit var service: WineService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +32,8 @@ class MainActivity : AppCompatActivity() {
 
         setupAdapter()
         setupRecyclerView()
+        setupRetrofit()
+        setupSwipeRefresh()
 
         }
 
@@ -35,9 +48,59 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupSwipeRefresh() {
+        binding.srlWines.setOnRefreshListener {
+            adapter.submitList(listOf())
+            getWines()
+        }
+    }
+
+    private  fun setupRetrofit() {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(Constants.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        service = retrofit.create(WineService::class.java)
+
+    }
+
     private fun getWines() {
-        val wines = getLocalWines()
-        adapter.submitList(wines)
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {//val wines = getLocalWines()
+                val serverOK = Random.nextBoolean()
+                val wines = if (serverOK) service.getRedWines() else listOf()
+                withContext(Dispatchers.Main) {
+                    if (wines.isNotEmpty()) {
+                        showRecyclerView(true)
+                        showNoDataView(false)
+                        adapter.submitList(wines)
+                    } else {
+                        showRecyclerView(false)
+                        showNoDataView(true)
+                    }
+                }
+            }  catch (e: Exception) {
+                showMsg((R.string.common_request_fail))
+                } finally {
+                    showProgress(false)
+                }
+
+        }
+    }
+
+    private fun showMsg(msgRes: Int) {
+        Snackbar.make(binding.root, msgRes, Snackbar.LENGTH_SHORT).show()}
+
+    private  fun showRecyclerView(isVisible: Boolean) {
+        binding.recyclerView.visibility = if (isVisible) View.VISIBLE else View.GONE
+        }
+
+    private  fun showNoDataView(isVisible: Boolean) {
+        binding.tvNoData.visibility = if (isVisible) View.VISIBLE else View.GONE
+        }
+
+    private  fun showProgress(isVisible: Boolean) {
+        binding.srlWines.isRefreshing = isVisible
     }
 
     private fun getLocalWines() = listOf(Wine("Maselva", "Emporda 2012",
@@ -56,6 +119,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        showProgress(true)
         getWines()
     }
 }
