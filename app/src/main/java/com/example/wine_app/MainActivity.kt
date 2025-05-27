@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.wine_app.databinding.ActivityMainBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -128,6 +129,26 @@ class MainActivity : AppCompatActivity(), OnClickListener{
     * OnClickListener
     * */
     override fun onLongClick(wine: Wine) {
-        showMsg(R.string.dialog_add_fav_title)
+        val options = resources.getStringArray(R.array.array_dialog_add_options)
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.dialog_add_fav_title)
+            .setItems (options) { _, index ->
+                when(index) {
+                    0 -> addToFavourites(wine)
+                }
+            }
+            .show()
+    }
+
+    private fun addToFavourites(wine: Wine) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val result = WineApplication.database.wineDao().addWine(wine)
+            if (result != -1L) {
+
+                showMsg(R.string.room_save_success)
+            } else {
+                showMsg(R.string.room_save_fail)
+            }
+        }
     }
 }

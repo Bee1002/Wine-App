@@ -37,6 +37,7 @@ android {
 
     viewBinding { enable = true }
 }
+val room_version = "2.7.1"
 
 dependencies {
 
@@ -56,6 +57,11 @@ dependencies {
 
     // Swipe Refresh Layout
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    // Room
+    implementation("androidx.room:room-runtime:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+
 
 
     testImplementation(libs.junit)

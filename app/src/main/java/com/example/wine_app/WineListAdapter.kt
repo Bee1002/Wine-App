@@ -50,7 +50,7 @@ class WineListAdapter : ListAdapter<Wine, RecyclerView.ViewHolder>(WineDiff()) {
         val binding = ItemWineBinding.bind(view)
 
         fun setListener(wine: Wine) {
-            binding.root.setOnClickListener {
+            binding.root.setOnLongClickListener {
                 listener.onLongClick(wine)
                 true
             }
