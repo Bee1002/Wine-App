@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Wine-App</string>
     <string name="common_request_fail">Error al cargar</string>
+    <string name="dialog_add_fav_title">¿Añadir a Favoritos?</string>
 </resources>

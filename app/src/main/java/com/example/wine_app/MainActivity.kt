@@ -19,7 +19,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.random.Random
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnClickListener{
 
     private lateinit var adapter: WineListAdapter
     private lateinit var binding: ActivityMainBinding
@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupAdapter() {
         adapter = WineListAdapter()
+        adapter.setOnClickListener(this)
     }
 
     private fun setupRecyclerView() {
@@ -103,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         binding.srlWines.isRefreshing = isVisible
     }
 
-    private fun getLocalWines() = listOf(Wine("Maselva", "Emporda 2012",
+    /*private fun getLocalWines() = listOf(Wine("Maselva", "Emporda 2012",
         Rating("4.9", "88 ratings"), "Spain\\n·\\nEmpordà",
         "https://images.vivino.com/thumbs/ApnIiXjcT5Kc33OHgNb9dA_375x500.jpg", 1),
     Wine("Perro", "Rojo",
@@ -116,10 +117,17 @@ class MainActivity : AppCompatActivity() {
     Rating("5.5", "239 ratings"), "Peru",
     "https://images.vivino.com/thumbs/GpcSXs2ERS6niDxoAsvESA_pb_x300.png", 4))
 
-
+*/
     override fun onResume() {
         super.onResume()
         showProgress(true)
         getWines()
+    }
+
+    /*
+    * OnClickListener
+    * */
+    override fun onLongClick(wine: Wine) {
+        showMsg(R.string.dialog_add_fav_title)
     }
 }

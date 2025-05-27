@@ -14,6 +14,7 @@ import com.example.wine_app.databinding.ItemWineBinding
 class WineListAdapter : ListAdapter<Wine, RecyclerView.ViewHolder>(WineDiff()) {
 
     private lateinit var context : Context
+    private lateinit var listener: OnClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         context = parent.context
@@ -23,6 +24,8 @@ class WineListAdapter : ListAdapter<Wine, RecyclerView.ViewHolder>(WineDiff()) {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val wine = getItem(position)
         (holder as ViewHolder).run {
+            setListener(wine)
+
             with(binding) {
                 tvWine.text = wine.wine
                 tvWine.text = wine.winery
@@ -38,9 +41,20 @@ class WineListAdapter : ListAdapter<Wine, RecyclerView.ViewHolder>(WineDiff()) {
         }
     }
 
+    fun setOnClickListener(listener: OnClickListener) {
+        this.listener = listener
+    }
+
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding = ItemWineBinding.bind(view)
+
+        fun setListener(wine: Wine) {
+            binding.root.setOnClickListener {
+                listener.onLongClick(wine)
+                true
+            }
+        }
     }
     private class WineDiff : DiffUtil.ItemCallback<Wine>() {
         override fun areItemsTheSame(oldItem: Wine, newItem: Wine): Boolean {
