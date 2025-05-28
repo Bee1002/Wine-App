@@ -5,7 +5,7 @@ import androidx.room.Room
 
 class WineApplication : Application() {
     companion object {
-        lateinit var database: WineDataBase
+        lateinit var database: WineDatabase
 
     }
 
@@ -13,8 +13,8 @@ class WineApplication : Application() {
         super.onCreate()
 
         database = Room.databaseBuilder(this,
-        WineDataBase::class.java,
-            "WineDataBase")
+        WineDatabase::class.java,
+            "WineDatabase")
             .build()
     }
 }

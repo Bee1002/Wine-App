@@ -6,6 +6,6 @@ import androidx.room.TypeConverters
 
 @Database(entities = [Wine::class], version = 1)
 @TypeConverters(WineConverters::class)
-abstract class WineDataBase : RoomDatabase(){
-    abstract fun wineDao(): WineDAO
+abstract class WineDatabase : RoomDatabase(){
+    abstract fun wineDao(): WineDao
 }

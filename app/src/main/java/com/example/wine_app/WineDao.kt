@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 
 @Dao
-interface WineDAO {
+interface WineDao {
     @Query("SELECT * FROM WineEntity")
     fun getAllWines(): MutableList<Wine>
 

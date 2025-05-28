@@ -28,7 +28,7 @@ class WineListAdapter : ListAdapter<Wine, RecyclerView.ViewHolder>(WineDiff()) {
 
             with(binding) {
                 tvWine.text = wine.wine
-                tvWine.text = wine.winery
+                tvWinery.text = wine.winery
                 tvLocation.text = wine.location
                 rating.rating = wine.rating.average.toFloat()
 
