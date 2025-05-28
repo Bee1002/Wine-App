@@ -142,6 +142,7 @@ class MainActivity : AppCompatActivity(), OnClickListener{
 
     private fun addToFavourites(wine: Wine) {
         lifecycleScope.launch(Dispatchers.IO) {
+            wine.isFavourite = true
             val result = WineApplication.database.wineDao().addWine(wine)
             if (result != -1L) {
 
