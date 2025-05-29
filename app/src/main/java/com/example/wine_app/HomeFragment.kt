@@ -19,21 +19,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.random.Random
 
-class HomeFragment : Fragment(), OnClickListener {
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() =  _binding!!
+class HomeFragment : BaseFragment(), OnClickListener {
 
     private lateinit var adapter: WineListAdapter
     private lateinit var service: WineService
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -98,29 +87,10 @@ class HomeFragment : Fragment(), OnClickListener {
 
         }
     }
-
-    private fun showMsg(msgRes: Int) {
-        Snackbar.make(binding.root, msgRes, Snackbar.LENGTH_SHORT).show()}
-
-    private  fun showRecyclerView(isVisible: Boolean) {
-        binding.recyclerView.visibility = if (isVisible) View.VISIBLE else View.GONE
-    }
-
-    private  fun showNoDataView(isVisible: Boolean) {
-        binding.tvNoData.visibility = if (isVisible) View.VISIBLE else View.GONE
-    }
-
-    private  fun showProgress(isVisible: Boolean) {
-        binding.srlWines.isRefreshing = isVisible
-    }    override fun onResume() {
+    override fun onResume() {
         super.onResume()
         showProgress(true)
         getWines()
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
     }
     /*
     * OnClickListener
@@ -148,5 +118,13 @@ class HomeFragment : Fragment(), OnClickListener {
                 showMsg(R.string.room_save_fail)
             }
         }
+    }
+
+    override fun onFavourite(wine: Wine) {
+        val favouriteFragment = FavouriteFragment()
+        childFragmentManager
+            .beginTransaction()
+            .add(R.id.container_home, favouriteFragment)
+            .commit()
     }
 }
