@@ -20,90 +20,21 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.random.Random
 
-class MainActivity : AppCompatActivity(), OnClickListener{
+class MainActivity : AppCompatActivity(){
 
-    private lateinit var adapter: WineListAdapter
     private lateinit var binding: ActivityMainBinding
-    private lateinit var service: WineService
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        setupAdapter()
-        setupRecyclerView()
-        setupRetrofit()
-        setupSwipeRefresh()
-
+        val homeFragment = HomeFragment()
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.nav_host, homeFragment)
+            .commit()
         }
-
-    private fun setupAdapter() {
-        adapter = WineListAdapter()
-        adapter.setOnClickListener(this)
-    }
-
-    private fun setupRecyclerView() {
-        binding.recyclerView.apply {
-            layoutManager = StaggeredGridLayoutManager(2, RecyclerView.VERTICAL)
-            adapter = this@MainActivity.adapter
-        }
-    }
-
-    private fun setupSwipeRefresh() {
-        binding.srlWines.setOnRefreshListener {
-            adapter.submitList(listOf())
-            getWines()
-        }
-    }
-
-    private  fun setupRetrofit() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        service = retrofit.create(WineService::class.java)
-
-    }
-
-    private fun getWines() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {//val wines = getLocalWines()
-                val serverOK = Random.nextBoolean()
-                val wines = if (serverOK) service.getRedWines() else listOf()
-                withContext(Dispatchers.Main) {
-                    if (wines.isNotEmpty()) {
-                        showRecyclerView(true)
-                        showNoDataView(false)
-                        adapter.submitList(wines)
-                    } else {
-                        showRecyclerView(false)
-                        showNoDataView(true)
-                    }
-                }
-            }  catch (e: Exception) {
-                showMsg((R.string.common_request_fail))
-                } finally {
-                    showProgress(false)
-                }
-
-        }
-    }
-
-    private fun showMsg(msgRes: Int) {
-        Snackbar.make(binding.root, msgRes, Snackbar.LENGTH_SHORT).show()}
-
-    private  fun showRecyclerView(isVisible: Boolean) {
-        binding.recyclerView.visibility = if (isVisible) View.VISIBLE else View.GONE
-        }
-
-    private  fun showNoDataView(isVisible: Boolean) {
-        binding.tvNoData.visibility = if (isVisible) View.VISIBLE else View.GONE
-        }
-
-    private  fun showProgress(isVisible: Boolean) {
-        binding.srlWines.isRefreshing = isVisible
-    }
 
     /*private fun getLocalWines() = listOf(Wine("Maselva", "Emporda 2012",
         Rating("4.9", "88 ratings"), "Spain\\n·\\nEmpordà",
@@ -119,37 +50,7 @@ class MainActivity : AppCompatActivity(), OnClickListener{
     "https://images.vivino.com/thumbs/GpcSXs2ERS6niDxoAsvESA_pb_x300.png", 4))
 
 */
-    override fun onResume() {
-        super.onResume()
-        showProgress(true)
-        getWines()
-    }
 
-    /*
-    * OnClickListener
-    * */
-    override fun onLongClick(wine: Wine) {
-        val options = resources.getStringArray(R.array.array_dialog_add_options)
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.dialog_add_fav_title)
-            .setItems (options) { _, index ->
-                when(index) {
-                    0 -> addToFavourites(wine)
-                }
-            }
-            .show()
-    }
 
-    private fun addToFavourites(wine: Wine) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            wine.isFavourite = true
-            val result = WineApplication.database.wineDao().addWine(wine)
-            if (result != -1L) {
 
-                showMsg(R.string.room_save_success)
-            } else {
-                showMsg(R.string.room_save_fail)
-            }
-        }
-    }
 }
