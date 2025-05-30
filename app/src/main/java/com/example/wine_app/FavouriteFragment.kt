@@ -13,12 +13,10 @@ import kotlin.random.Random
 
 class FavouriteFragment : BaseFragment(), OnClickListener {
 
-    private lateinit var adapter: WineListAdapter
+    private lateinit var adapter: WineFavListAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
 
         setupAdapter()
         setupRecyclerView()
@@ -27,7 +25,7 @@ class FavouriteFragment : BaseFragment(), OnClickListener {
     }
 
     private fun setupAdapter() {
-        adapter = WineListAdapter()
+        adapter = WineFavListAdapter()
         adapter.setOnClickListener(this)
     }
 
@@ -49,6 +47,7 @@ class FavouriteFragment : BaseFragment(), OnClickListener {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val wines = WineApplication.database.wineDao().getAllWines()
+                //val wines = WineApplication.database.wineDao().getWineFav(true)
                 withContext(Dispatchers.Main) {
                     if (wines.isNotEmpty()) {
                         showRecyclerView(true)
@@ -76,10 +75,26 @@ class FavouriteFragment : BaseFragment(), OnClickListener {
     * OnClickListener
     * */
     override fun onLongClick(wine: Wine) {
+        lifecycleScope.launch (Dispatchers.IO){
+            val result = WineApplication.database.wineDao().deleteWine(wine)
+            if (result == 0) {
+                showMsg(R.string.room_save_fail)
+            } else {
+                showMsg(R.string.room_delete_success)
+            }
+        }
 
     }
 
     override fun onFavourite(wine: Wine) {
-
+        wine.isFavourite = !wine.isFavourite
+        lifecycleScope.launch (Dispatchers.IO){
+            val result = WineApplication.database.wineDao().updateWine(wine)
+            if (result == 0) {
+                showMsg(R.string.room_save_fail)
+            } else {
+                showMsg(R.string.room_update_success)
+            }
+        }
     }
 }

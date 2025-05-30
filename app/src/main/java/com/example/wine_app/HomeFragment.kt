@@ -121,10 +121,6 @@ class HomeFragment : BaseFragment(), OnClickListener {
     }
 
     override fun onFavourite(wine: Wine) {
-        val favouriteFragment = FavouriteFragment()
-        childFragmentManager
-            .beginTransaction()
-            .add(R.id.container_home, favouriteFragment)
-            .commit()
+
     }
 }

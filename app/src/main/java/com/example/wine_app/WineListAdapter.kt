@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.wine_app.databinding.ItemWineBinding
 
-class WineListAdapter : ListAdapter<Wine, RecyclerView.ViewHolder>(WineDiff()) {
+open class WineListAdapter : ListAdapter<Wine, RecyclerView.ViewHolder>(WineDiff()) {
 
     private lateinit var context : Context
     private lateinit var listener: OnClickListener
@@ -54,6 +54,10 @@ class WineListAdapter : ListAdapter<Wine, RecyclerView.ViewHolder>(WineDiff()) {
                 listener.onLongClick(wine)
                 true
             }
+
+            binding.cbFavorite.setOnClickListener {
+                listener.onFavourite(wine)
+            }
         }
     }
     private class WineDiff : DiffUtil.ItemCallback<Wine>() {
@@ -61,10 +65,7 @@ class WineListAdapter : ListAdapter<Wine, RecyclerView.ViewHolder>(WineDiff()) {
             return  oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(
-            oldItem: Wine,
-            newItem: Wine
-        ): Boolean {
+        override fun areContentsTheSame(oldItem: Wine, newItem: Wine): Boolean {
             return oldItem == newItem
         }
     }
