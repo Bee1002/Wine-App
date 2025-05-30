@@ -67,6 +67,11 @@ class FavouriteFragment : BaseFragment(), OnClickListener {
 
         }
     }
+    override fun onResume() {
+        super.onResume()
+        showProgress(true)
+        getWines()
+    }
     /*
     * OnClickListener
     * */
